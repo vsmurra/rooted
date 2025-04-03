@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Meals - Rooted</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      .meal-list {
+        margin-top: 2rem;
+      }
+      .meal-list a {
+        display: block;
+        margin: 0.5rem auto;
+        padding: 0.7rem;
+        background-color: #aed581;
+        color: black;
+        text-decoration: none;
+        width: 200px;
+        border-radius: 6px;
+      }
+      .meal-list a:hover {
+        background-color: #9ccc65;
+      }
+      .top-nav {
+        margin-bottom: 1rem;
+      }
+      .top-nav a {
+        margin: 0 1rem;
+        text-decoration: none;
+        font-weight: bold;
+        color: #2e7d32;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-nav">
+      <a href="/meals/new">Log a Meal</a>
+      <a href="/auth/sign-out">Sign Out</a>
+    </div>
+
+    <h1>Rooted</h1>
+    <h2>My Meals</h2>
+
+    <div class="meal-list">
+      <% meals.forEach((meal, index) => { %>
+        <a href="/meals/<%= meal._id %>">Meal <%= index + 1 %></a>
+      <% }) %>
+    </div>
+  </body>
+</html>
