@@ -1,10 +1,85 @@
-<!-- log a meal -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Log a New Meal</title>
+    <title>Log a New Meal - Rooted</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-top: 1.5rem;
+        font-weight: bold;
+      }
+
+      input[type="text"] {
+        padding: 0.5rem;
+        width: 300px;
+        margin-top: 0.5rem;
+      }
+
+      #suggestions {
+        list-style: none;
+        padding: 0;
+        margin-top: 0.5rem;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      #suggestions li {
+        background-color: #f0f0f0;
+        margin: 4px auto;
+        padding: 6px;
+        cursor: pointer;
+        width: 300px;
+        border-radius: 4px;
+      }
+
+      #suggestions li:hover {
+        background-color: #dcedc8;
+      }
+
+      #selectedIngredients div {
+        background-color: #aed581;
+        color: #333;
+        display: inline-block;
+        margin: 4px;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+
+      button {
+        margin-top: 2rem;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        background-color: #2e7d32;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #1b5e20;
+      }
+
+      a {
+        display: block;
+        margin-top: 2rem;
+        text-decoration: none;
+        color: #2e7d32;
+      }
+    </style>
   </head>
   <body>
     <h1>Log a New Meal</h1>
@@ -13,16 +88,83 @@
       <label for="photoUrl">Photo URL:</label>
       <input type="text" name="photoUrl" id="photoUrl" required />
 
-      <label for="ingredients">Select Ingredients:</label>
-      <select name="ingredients" id="ingredients" multiple size="10">
-        <% ingredients.forEach(ingredient => { %>
-          <option value="<%= ingredient._id %>"><%= ingredient.name %></option>
-        <% }) %>
-      </select>
+      <label for="ingredientSearch">Add Ingredients:</label>
+      <input type="text" id="ingredientSearch" placeholder="Type an ingredient" autocomplete="off" />
+
+      <ul id="suggestions"></ul>
+
+      <div id="selectedIngredients"></div>
+
+      <input type="hidden" name="ingredients" id="ingredientsHidden" />
 
       <button type="submit">Save Meal</button>
     </form>
 
     <a href="/meals">Back to All Meals</a>
+
+    <script>
+      const allIngredients = <%- JSON.stringify(ingredients) %>;
+      const searchInput = document.getElementById("ingredientSearch");
+      const suggestions = document.getElementById("suggestions");
+      const selectedIngredientsDiv = document.getElementById("selectedIngredients");
+      const hiddenInput = document.getElementById("ingredientsHidden");
+    
+      let selectedIngredientIds = [];
+    
+      searchInput.addEventListener("input", () => {
+        const input = searchInput.value.toLowerCase();
+        suggestions.innerHTML = "";
+    
+        if (input.length === 0) return;
+    
+        const matches = allIngredients.filter(i =>
+          i.name.toLowerCase().includes(input) &&
+          !selectedIngredientIds.includes(i._id)
+        );
+    
+        matches.forEach(match => {
+          const li = document.createElement("li");
+          li.textContent = match.name;
+          li.onclick = () => {
+            selectedIngredientIds.push(match._id);
+            updateSelectedIngredients();
+            searchInput.value = "";
+            suggestions.innerHTML = "";
+          };
+          suggestions.appendChild(li);
+        });
+      });
+    
+      // ⛔️ DELETE your old version of this function ⛔️
+      // function updateSelectedIngredients() { ... }
+    
+      // ✅ REPLACE it with this updated version:
+      function updateSelectedIngredients() {
+        selectedIngredientsDiv.innerHTML = "";
+    
+        selectedIngredientIds.forEach(id => {
+          const ingredient = allIngredients.find(i => i._id === id);
+          const chip = document.createElement("div");
+          chip.textContent = ingredient.name;
+          chip.style.position = "relative";
+    
+          const removeBtn = document.createElement("span");
+          removeBtn.textContent = " ✖";
+          removeBtn.style.cursor = "pointer";
+          removeBtn.style.marginLeft = "8px";
+          removeBtn.style.color = "darkred";
+          removeBtn.onclick = () => {
+            selectedIngredientIds = selectedIngredientIds.filter(item => item !== id);
+            updateSelectedIngredients();
+          };
+    
+          chip.appendChild(removeBtn);
+          selectedIngredientsDiv.appendChild(chip);
+        });
+    
+        hiddenInput.value = selectedIngredientIds.join(",");
+      }
+    </script>
+    
   </body>
 </html>
