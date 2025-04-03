@@ -1,31 +1,122 @@
-<!-- meal detail page -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Meal Detail</title>
+    <title>Meal Details - Rooted</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .photo {
+        max-width: 400px;
+        margin: 1rem auto;
+        border-radius: 10px;
+      }
+
+      .ingredient {
+        background-color: #e0f2f1;
+        display: inline-block;
+        margin: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+      }
+
+      .benefits-box {
+        background-color: #f1f8e9;
+        padding: 1rem;
+        margin-top: 2rem;
+        border-radius: 10px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+      }
+
+      .benefits-box h2 {
+        font-size: 1.5rem;
+        color: #33691e;
+      }
+
+      .benefits-box ul {
+        padding-left: 1.5rem;
+        text-align: left;
+      }
+
+      .nav-links {
+        margin-top: 2rem;
+      }
+
+      .nav-links a,
+      .nav-links form button {
+        display: inline-block;
+        margin: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .edit-btn {
+        background-color: #81c784;
+        color: white;
+        border: none;
+      }
+
+      .delete-btn {
+        background-color: #e57373;
+        color: white;
+        border: none;
+      }
+
+      .back-btn {
+        color: #2e7d32;
+        text-decoration: none;
+        margin-top: 2rem;
+        display: block;
+      }
+    </style>
   </head>
   <body>
-    <h1>Meal Details</h1>
+    <h1>Meal Details 🌿</h1>
 
-    <img src="<%= meal.photoUrl %>" alt="Meal photo" width="300" />
+    <img class="photo" src="<%= meal.photoUrl %>" alt="Meal Photo" />
 
-    <h3>Ingredients:</h3>
-    <ul>
+    <h2>Ingredients:</h2>
+    <div>
       <% meal.ingredients.forEach(ingredient => { %>
-        <li>
-          <strong><%= ingredient.name %></strong>: <%= ingredient.benefits %>
-        </li>
+        <span class="ingredient"><%= ingredient.name %></span>
       <% }) %>
-    </ul>
+    </div>
 
-    <a href="/meals/<%= meal._id %>/edit">Edit this meal</a>
-    <form action="/meals/<%= meal._id %>?_method=DELETE" method="POST" style="margin-top:10px;">
-      <button type="submit">Delete Meal</button>
-    </form>
+    <div class="benefits-box">
+      <h2>This meal supports you by:</h2>
+      <ul>
+        <% meal.ingredients.forEach(ingredient => { %>
+          <li><strong><%= ingredient.name %></strong>: <%= ingredient.benefits %></li>
+        <% }) %>
+      </ul>
+    </div>
 
-    <br />
-    <a href="/meals">Back to All Meals</a>
+    <div class="nav-links">
+      <a class="edit-btn" href="/meals/<%= meal._id %>/edit"> Edit This Meal</a>
+
+      <form action="/meals/<%= meal._id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button class="delete-btn" type="submit" onclick="return confirm('Are you sure you want to delete this meal?')">
+          Delete This Meal
+        </button>
+      </form>
+    </div>
+
+    <a class="back-btn" href="/meals">← Back to My Meals</a>
   </body>
 </html>
