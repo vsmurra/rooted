@@ -1,47 +1,48 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
-// list our routes
+// SIGN UP PAGE
 export const getSignUp = (req, res) => {
   res.render("auth/sign-up");
 };
 
+// SIGN IN PAGE
 export const getSignIn = (req, res) => {
   res.render("auth/sign-in");
 };
 
+// REGISTER NEW USER
 export const registerUser = async (req, res) => {
-  // Check if password and confirm password match
+  // 1. Check if passwords match
   if (req.body.password !== req.body.confirmPassword) {
-    return res.send("Password and Confirm Password must match");
+    return res.send("Password and Confirm Password must match.");
   }
 
-  // Check if username already in database
+  // 2. Check if username already exists
   const userInDB = await User.findOne({ username: req.body.username });
   if (userInDB) {
     return res.send("Username already taken.");
   }
 
-  // Hash our plain-text password before saving to DB (for security)
+  // 3. Hash the password
   const hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
+  // 4. Create user
   const user = await User.create({
     username: req.body.username,
     password: hashedPassword,
   });
 
-  req.session.user = {
-    _id: user._id,
-    username: user.username,
-  };
-
+  // 5. Redirect to login (don’t log them in yet)
   req.session.save(() => {
-    res.redirect("/");
+    res.redirect("/auth/sign-in");
   });
 };
 
+// LOG IN USER
 export const loginUser = async (req, res) => {
   const userInDatabase = await User.findOne({ username: req.body.username });
+
   if (!userInDatabase) {
     return res.send("Login failed. Please try again.");
   }
@@ -61,10 +62,11 @@ export const loginUser = async (req, res) => {
   };
 
   req.session.save(() => {
-    res.redirect("/");
+    res.redirect("/meals"); // Redirect to landing page after login
   });
 };
 
+// SIGN OUT USER
 export const signOutUser = (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");

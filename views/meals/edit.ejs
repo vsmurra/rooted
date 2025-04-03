@@ -1,0 +1,32 @@
+<!-- edit meal page -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Meal</title>
+  </head>
+  <body>
+    <h1>Edit Meal</h1>
+
+    <form action="/meals/<%= meal._id %>?_method=PUT" method="POST">
+      <label for="photoUrl">Photo URL:</label>
+      <input type="text" name="photoUrl" id="photoUrl" value="<%= meal.photoUrl %>" required />
+
+      <label for="ingredients">Select Ingredients:</label>
+      <select name="ingredients" id="ingredients" multiple size="10">
+        <% ingredients.forEach(ingredient => { %>
+          <option 
+            value="<%= ingredient._id %>" 
+            <%= meal.ingredients.includes(ingredient._id) ? "selected" : "" %>>
+            <%= ingredient.name %>
+          </option>
+        <% }) %>
+      </select>
+
+      <button type="submit">Update Meal</button>
+    </form>
+
+    <a href="/meals/<%= meal._id %>">Cancel</a>
+  </body>
+</html>

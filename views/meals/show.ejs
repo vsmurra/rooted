@@ -1,0 +1,31 @@
+<!-- meal detail page -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meal Detail</title>
+  </head>
+  <body>
+    <h1>Meal Details</h1>
+
+    <img src="<%= meal.photoUrl %>" alt="Meal photo" width="300" />
+
+    <h3>Ingredients:</h3>
+    <ul>
+      <% meal.ingredients.forEach(ingredient => { %>
+        <li>
+          <strong><%= ingredient.name %></strong>: <%= ingredient.benefits %>
+        </li>
+      <% }) %>
+    </ul>
+
+    <a href="/meals/<%= meal._id %>/edit">Edit this meal</a>
+    <form action="/meals/<%= meal._id %>?_method=DELETE" method="POST" style="margin-top:10px;">
+      <button type="submit">Delete Meal</button>
+    </form>
+
+    <br />
+    <a href="/meals">Back to All Meals</a>
+  </body>
+</html>

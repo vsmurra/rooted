@@ -1,0 +1,28 @@
+<!-- log a meal -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Log a New Meal</title>
+  </head>
+  <body>
+    <h1>Log a New Meal</h1>
+
+    <form action="/meals" method="POST">
+      <label for="photoUrl">Photo URL:</label>
+      <input type="text" name="photoUrl" id="photoUrl" required />
+
+      <label for="ingredients">Select Ingredients:</label>
+      <select name="ingredients" id="ingredients" multiple size="10">
+        <% ingredients.forEach(ingredient => { %>
+          <option value="<%= ingredient._id %>"><%= ingredient.name %></option>
+        <% }) %>
+      </select>
+
+      <button type="submit">Save Meal</button>
+    </form>
+
+    <a href="/meals">Back to All Meals</a>
+  </body>
+</html>
