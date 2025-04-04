@@ -5,6 +5,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>Edit Meal</title>
+    <style>
+      button{
+        background-color: #aed581;
+      }
+      .cancel{ background-color: #aed581;}
+    </style>
   </head>
   <body>
     <h1>Edit Meal</h1>
@@ -23,10 +29,11 @@
           </option>
         <% }) %>
       </select>
-
+<br>
       <button type="submit">Update Meal</button>
     </form>
-
-    <a href="/meals/<%= meal._id %>">Cancel</a>
+<form action="/meals/<%= meal._id %>">
+  <input class="cancel" type="submit" value="Cancel"/>
+</form>
   </body>
 </html>

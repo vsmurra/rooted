@@ -3,18 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
+    <title>Sign Up - Rooted</title>
+    <link rel="stylesheet" href="/assets/style-signin.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Lato&display=swap" rel="stylesheet">
   </head>
   <body>
-    <h1>Create a new account!</h1>
-    <form action="/auth/sign-up" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" name="username" id="username" />
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password" />
-      <label for="confirmPassword">Confirm Password:</label>
-      <input type="password" name="confirmPassword" id="confirmPassword" />
-      <button type="submit">Sign up</button>
-    </form>
+    <div class="container">
+      <div class="login-card">
+        <h1>Join Rooted 🌿</h1>
+        <p class="subtitle">Create your account and start nourishing yourself</p>
+        <form action="/auth/sign-up" method="POST">
+          <label for="username">Username</label>
+          <input type="text" name="username" id="username" required />
+
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" required />
+
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" name="confirmPassword" id="confirmPassword" required />
+
+          <button type="submit">Sign Up</button>
+        </form>
+        <p class="link-text">Already have an account? <a href="/auth/sign-in">Sign in</a></p>
+      </div>
+    </div>
   </body>
 </html>

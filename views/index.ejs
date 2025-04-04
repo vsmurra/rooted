@@ -1,17 +1,29 @@
+   <!-- HOME PAGE -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
+    <link rel="stylesheet" href="/assets/style-signin.css" />
+
     <meta charset="UTF-8" />
+    
     <title>Rooted</title>
+    <!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lato&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/style-home.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
         text-align: center;
         padding: 2rem;
+        background-color:#C1E1C1 ;
       }
+    
       h1 {
         font-size: 4rem;
         margin-bottom: 0.5rem;
+        color:green ;
       }
       p {
         font-size: 1.2rem;
@@ -33,13 +45,27 @@
       }
     </style>
   </head>
+
   <body>
+    <div class="container">
+      <h1 class="rooted-logo">Rooted</h1>
+      <p class="description">Welcome to Rooted! Log your meals, share with friends, discover health benefits.</p>
+  
+      <div class="button-group">
+        <a href="/auth/sign-in" class="btn">Log In</a>
+        <a href="/auth/sign-up" class="btn">Sign Up</a>
+      </div>
+    </div>
+  </body>
+  
+  <!-- <body>
+    <img src="./assets/logo.png" alt="Rooted Logo" class="logo" />
     <h1>Rooted</h1>
-    <p>Welcome to Rooted! Log your meals, share with friends, discover health benefits.</p>
+    <p class="tagline">Welcome to Rooted! Log your meals, share with friends, discover health benefits.</p>
 
     <div class="auth-buttons">
       <a href="/auth/sign-in">Log In</a>
       <a href="/auth/sign-up">Sign Up</a>
     </div>
-  </body>
+  </body> -->
 </html>

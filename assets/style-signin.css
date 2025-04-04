@@ -1,0 +1,81 @@
+body {
+  font-family: 'Lato', sans-serif;
+  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-card h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #2e7d32;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  text-align: left;
+  margin-bottom: 0.3rem;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+input {
+  padding: 0.6rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #81c784;
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #66bb6a;
+}
+
+.link-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.link-text a {
+  color: #388e3c;
+  text-decoration: none;
+}
