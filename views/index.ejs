@@ -1,71 +1,32 @@
-   <!-- HOME PAGE -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
-    <link rel="stylesheet" href="/assets/style-signin.css" />
-
     <meta charset="UTF-8" />
-    
     <title>Rooted</title>
-    <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Lato&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="/assets/style-home.css" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 2rem;
-        background-color:#C1E1C1 ;
-      }
-    
-      h1 {
-        font-size: 4rem;
-        margin-bottom: 0.5rem;
-        color:green ;
-      }
-      p {
-        font-size: 1.2rem;
-        color: #555;
-        margin-bottom: 2rem;
-      }
-      .auth-buttons a {
-        display: inline-block;
-        margin: 0 1rem;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-        background-color: #2e7d32;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-      }
-      .auth-buttons a:hover {
-        background-color: #1b5e20;
-      }
-    </style>
   </head>
 
   <body>
     <div class="container">
+      <!-- Logo Image -->
+      <img src="/assets/logo.png" alt="Rooted Logo" class="logo" />
+
+      <!-- App Title -->
       <h1 class="rooted-logo">Rooted</h1>
+
+      <!-- Tagline -->
       <p class="description">Welcome to Rooted! Log your meals, share with friends, discover health benefits.</p>
-  
+
+      <!-- Auth Buttons -->
       <div class="button-group">
         <a href="/auth/sign-in" class="btn">Log In</a>
         <a href="/auth/sign-up" class="btn">Sign Up</a>
       </div>
     </div>
   </body>
-  
-  <!-- <body>
-    <img src="./assets/logo.png" alt="Rooted Logo" class="logo" />
-    <h1>Rooted</h1>
-    <p class="tagline">Welcome to Rooted! Log your meals, share with friends, discover health benefits.</p>
-
-    <div class="auth-buttons">
-      <a href="/auth/sign-in">Log In</a>
-      <a href="/auth/sign-up">Sign Up</a>
-    </div>
-  </body> -->
 </html>
