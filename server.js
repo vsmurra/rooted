@@ -16,7 +16,9 @@ const PORT = process.env.PORT ? process.env.PORT : "3000";
 // Static assets middleware
 app.use("/assets/", express.static("./assets"));
 // Middleware to parse URL-encoded data from forms
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' }));
+
 // Middleware for using HTTP verbs such as PUT or DELETE
 app.use(methodOverride("_method"));
 // Morgan for logging HTTP requests

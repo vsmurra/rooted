@@ -1,106 +1,97 @@
 import Meal from "../models/meal.js";
 import Ingredient from "../models/ingredient.js";
 
-// INDEX - Show all meals for the logged-in user
+// Show all meals for the logged-in user
 export const index = async (req, res) => {
   try {
-    const meals = await Meal.find({ userId: req.session.user._id });
+    const meals = await Meal.find({ userId: req.session.user._id }).populate("ingredients");
     res.render("meals/index", { meals });
   } catch (error) {
-    console.log("Error loading meals:", error);
-    res.send("Could not load meals.");
+    res.status(500).send("Error retrieving meals.");
   }
 };
 
-// NEW - Render form to create a new meal
+// Show form to log a new meal
 export const newMeal = async (req, res) => {
   try {
-    const ingredients = await Ingredient.find();
+    const ingredients = await Ingredient.find({});
     res.render("meals/new", { ingredients });
   } catch (error) {
-    console.log("Error loading new meal form:", error);
-    res.send("Could not load form.");
+    res.status(500).send("Error loading form.");
   }
 };
 
-// CREATE - Save a new meal
+// Create and save a new meal
 export const create = async (req, res) => {
   try {
-    const { photoUrl } = req.body;
-    let ingredients = req.body.ingredients;
+    const ingredientNames = Array.isArray(req.body.ingredients)
+      ? req.body.ingredients
+      : [req.body.ingredients];
 
-    // Convert to array if it's a single comma-separated string
-    if (typeof ingredients === "string") {
-      ingredients = ingredients.split(",");
-    }
-
-    if (!ingredients) ingredients = [];
+    const foundIngredients = await Ingredient.find({ name: { $in: ingredientNames } });
 
     const meal = await Meal.create({
-      photoUrl,
-      ingredients,
+      photoUrl: req.body.photoUrl,
+      ingredients: foundIngredients.map(i => i._id),
       userId: req.session.user._id
     });
 
-    res.redirect(`/meals/${meal._id}`);
+    res.redirect("/meals");
   } catch (error) {
-    console.log("Error saving meal:", error);
-    res.send("Error saving meal.");
+    console.error("Error saving meal:", error);
+    res.status(500).send("Error saving meal.");
   }
 };
 
-// SHOW - Show details of one meal
+// Show detail page for a single meal
 export const show = async (req, res) => {
   try {
     const meal = await Meal.findById(req.params.id).populate("ingredients");
+    if (!meal) return res.status(404).send("Meal not found.");
     res.render("meals/show", { meal });
   } catch (error) {
-    console.log("Error loading meal:", error);
-    res.send("Could not load meal.");
+    res.status(500).send("Error showing meal.");
   }
 };
 
-// EDIT - Render form to edit a meal
+// Show edit form for a meal
 export const edit = async (req, res) => {
   try {
     const meal = await Meal.findById(req.params.id);
-    const ingredients = await Ingredient.find();
+    const ingredients = await Ingredient.find({});
+    if (!meal) return res.status(404).send("Meal not found.");
     res.render("meals/edit", { meal, ingredients });
   } catch (error) {
-    console.log("Error loading edit form:", error);
-    res.send("Could not load edit form.");
+    res.status(500).send("Error loading edit form.");
   }
 };
 
-// UPDATE - Update the meal
+// Update a meal
 export const update = async (req, res) => {
   try {
-    const { photoUrl } = req.body;
-    let ingredients = req.body.ingredients;
+    const ingredientNames = Array.isArray(req.body.ingredients)
+      ? req.body.ingredients
+      : [req.body.ingredients];
 
-    if (typeof ingredients === "string") {
-      ingredients = ingredients.split(",");
-    }
+    const foundIngredients = await Ingredient.find({ name: { $in: ingredientNames } });
 
     await Meal.findByIdAndUpdate(req.params.id, {
-      photoUrl,
-      ingredients
+      photoUrl: req.body.photoUrl,
+      ingredients: foundIngredients.map(i => i._id),
     });
 
-    res.redirect(`/meals/${req.params.id}`);
+    res.redirect("/meals/" + req.params.id);
   } catch (error) {
-    console.log("Error updating meal:", error);
-    res.send("Error updating meal.");
+    res.status(500).send("Error updating meal.");
   }
 };
 
-// DELETE - Remove the meal
+// Delete a meal
 export const deleteMeal = async (req, res) => {
   try {
     await Meal.findByIdAndDelete(req.params.id);
     res.redirect("/meals");
   } catch (error) {
-    console.log("Error deleting meal:", error);
-    res.send("Error deleting meal.");
+    res.status(500).send("Error deleting meal.");
   }
 };

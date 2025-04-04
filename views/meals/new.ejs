@@ -3,168 +3,266 @@
   <head>
     <meta charset="UTF-8" />
     <title>Log a New Meal - Rooted</title>
+    <link rel="stylesheet" href="/assets/style-new-meal.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet" />
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: 'Lato', sans-serif;
+        background-color: #f0fdf4;
+        margin: 0;
         padding: 2rem;
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       h1 {
-        font-size: 2.5rem;
+        color: #2e7d32;
         margin-bottom: 1rem;
+        font-size: 2.5rem;
+      }
+
+      form {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
       }
 
       label {
-        display: block;
-        margin-top: 1.5rem;
         font-weight: bold;
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
       }
 
       input[type="text"] {
-        padding: 0.5rem;
-        width: 300px;
-        margin-top: 0.5rem;
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
       }
 
-      #suggestions {
-        list-style: none;
-        padding: 0;
-        margin-top: 0.5rem;
-        max-height: 150px;
-        overflow-y: auto;
-      }
-
-      #suggestions li {
-        background-color: #f0f0f0;
-        margin: 4px auto;
-        padding: 6px;
+      .image-drop-zone {
+        border: 2px dashed #81c784;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        background-color: #f9fef9;
+        color: #4e4e4e;
         cursor: pointer;
-        width: 300px;
-        border-radius: 4px;
       }
 
-      #suggestions li:hover {
-        background-color: #dcedc8;
+      .image-preview {
+        margin-top: 1rem;
+        max-width: 100%;
+        border-radius: 10px;
       }
 
-      #selectedIngredients div {
-        background-color: #aed581;
-        color: #333;
-        display: inline-block;
-        margin: 4px;
-        padding: 6px 10px;
+      .ingredient-search {
+        position: relative;
+        margin-top: 1rem;
+      }
+
+      #ingredient-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ccc;
+        z-index: 100;
+        display: none;
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 6px;
+      }
+
+      .ingredient-option {
+        padding: 0.5rem;
+        cursor: pointer;
+      }
+
+      .ingredient-option:hover {
+        background-color: #e8f5e9;
+      }
+
+      .selected-ingredients {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .ingredient-tag {
+        background-color: #a5d6a7;
+        padding: 0.4rem 0.8rem;
         border-radius: 20px;
-        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
-      button {
-        margin-top: 2rem;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        background-color: #2e7d32;
+      .ingredient-tag button {
+        background: none;
+        border: none;
+        color: #2e7d32;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      button[type="submit"] {
+        background-color: #66bb6a;
         color: white;
+        padding: 0.8rem 1.5rem;
         border: none;
         border-radius: 8px;
+        font-size: 1rem;
+        margin-top: 1.5rem;
         cursor: pointer;
       }
 
-      button:hover {
-        background-color: #1b5e20;
+      button[type="submit"]:hover {
+        background-color: #4caf50;
       }
 
       a {
-        display: block;
-        margin-top: 2rem;
-        text-decoration: none;
+        display: inline-block;
+        margin-top: 1rem;
         color: #2e7d32;
+        text-decoration: none;
       }
     </style>
   </head>
   <body>
-    <h1>Log a New Meal</h1>
+    <h1>Log a New Meal 🌿</h1>
 
     <form action="/meals" method="POST">
       <label for="photoUrl">Photo URL:</label>
-      <input type="text" name="photoUrl" id="photoUrl" required />
+      <div id="drop-zone" class="image-drop-zone">
+        Drag & drop or click to upload a photo
+        <input type="file" accept="image/*" id="photoInput" style="display: none;" />
+        <input type="hidden" name="photoUrl" id="photoUrl" />
+        <img id="preview" class="image-preview" src="" alt="" />
+      </div>
 
-      <label for="ingredientSearch">Add Ingredients:</label>
-      <input type="text" id="ingredientSearch" placeholder="Type an ingredient" autocomplete="off" />
+      <label for="ingredient-input">Select Ingredients:</label>
+      <div class="ingredient-search">
+        <input type="text" id="ingredient-input" placeholder="Type to search ingredients..." />
+        <div id="ingredient-dropdown"></div>
+      </div>
+      <div class="selected-ingredients" id="selected-ingredients"></div>
 
-      <ul id="suggestions"></ul>
-
-      <div id="selectedIngredients"></div>
-
-      <input type="hidden" name="ingredients" id="ingredientsHidden" />
-
+      <input type="hidden" name="ingredients" id="ingredientsInput" />
       <button type="submit">Save Meal</button>
     </form>
 
-    <a href="/meals">Back to All Meals</a>
+    <a href="/meals">← Back to All Meals</a>
 
     <script>
-      const allIngredients = <%- JSON.stringify(ingredients) %>;
-      const searchInput = document.getElementById("ingredientSearch");
-      const suggestions = document.getElementById("suggestions");
-      const selectedIngredientsDiv = document.getElementById("selectedIngredients");
-      const hiddenInput = document.getElementById("ingredientsHidden");
-    
-      let selectedIngredientIds = [];
-    
-      searchInput.addEventListener("input", () => {
-        const input = searchInput.value.toLowerCase();
-        suggestions.innerHTML = "";
-    
-        if (input.length === 0) return;
-    
-        const matches = allIngredients.filter(i =>
-          i.name.toLowerCase().includes(input) &&
-          !selectedIngredientIds.includes(i._id)
-        );
-    
-        matches.forEach(match => {
-          const li = document.createElement("li");
-          li.textContent = match.name;
-          li.onclick = () => {
-            selectedIngredientIds.push(match._id);
-            updateSelectedIngredients();
-            searchInput.value = "";
-            suggestions.innerHTML = "";
+      // IMAGE UPLOAD
+      const dropZone = document.getElementById("drop-zone");
+      const photoInput = document.getElementById("photoInput");
+      const photoUrlInput = document.getElementById("photoUrl");
+      const preview = document.getElementById("preview");
+
+      dropZone.addEventListener("click", () => photoInput.click());
+
+      photoInput.addEventListener("change", () => {
+        const file = photoInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            preview.src = reader.result;
+            photoUrlInput.value = reader.result;
           };
-          suggestions.appendChild(li);
-        });
+          reader.readAsDataURL(file);
+        }
       });
-    
-      //  DELETE old version of this function 
-      // function updateSelectedIngredients() { ... }
-    
-      // ✅ REPLACE it with this updated version:
-      function updateSelectedIngredients() {
-        selectedIngredientsDiv.innerHTML = "";
-    
-        selectedIngredientIds.forEach(id => {
-          const ingredient = allIngredients.find(i => i._id === id);
-          const chip = document.createElement("div");
-          chip.textContent = ingredient.name;
-          chip.style.position = "relative";
-    
-          const removeBtn = document.createElement("span");
-          removeBtn.textContent = " ✖";
-          removeBtn.style.cursor = "pointer";
-          removeBtn.style.marginLeft = "8px";
-          removeBtn.style.color = "darkred";
-          removeBtn.onclick = () => {
-            selectedIngredientIds = selectedIngredientIds.filter(item => item !== id);
-            updateSelectedIngredients();
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragging");
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragging");
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragging");
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            preview.src = reader.result;
+            photoUrlInput.value = reader.result;
           };
-    
-          chip.appendChild(removeBtn);
-          selectedIngredientsDiv.appendChild(chip);
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // INGREDIENT SEARCH
+      const ingredientInput = document.getElementById("ingredient-input");
+      const dropdown = document.getElementById("ingredient-dropdown");
+      const selectedIngredients = document.getElementById("selected-ingredients");
+      const ingredientsInput = document.getElementById("ingredientsInput");
+
+      const selected = [];
+
+      ingredientInput.addEventListener("input", () => {
+        const filter = ingredientInput.value.toLowerCase();
+        dropdown.innerHTML = "";
+
+        if (filter.length === 0) {
+          dropdown.style.display = "none";
+          return;
+        }
+
+        const filtered = <%- JSON.stringify(ingredients) %>.filter(ingredient =>
+          ingredient.name.toLowerCase().includes(filter)
+        );
+
+        filtered.forEach(ingredient => {
+          const option = document.createElement("div");
+          option.classList.add("ingredient-option");
+          option.dataset.name = ingredient.name;
+          option.textContent = ingredient.name;
+          dropdown.appendChild(option);
         });
-    
-        hiddenInput.value = selectedIngredientIds.join(",");
-      }
+
+        dropdown.style.display = "block";
+      });
+
+      dropdown.addEventListener("click", (e) => {
+        if (e.target.classList.contains("ingredient-option")) {
+          const name = e.target.dataset.name;
+          if (!selected.includes(name)) {
+            selected.push(name);
+
+            const tag = document.createElement("div");
+            tag.classList.add("ingredient-tag");
+            tag.innerHTML = `${name} <button type="button">×</button>`;
+            tag.querySelector("button").addEventListener("click", () => {
+              tag.remove();
+              const index = selected.indexOf(name);
+              if (index > -1) selected.splice(index, 1);
+              ingredientsInput.value = JSON.stringify(selected);
+            });
+
+            selectedIngredients.appendChild(tag);
+            ingredientsInput.value = JSON.stringify(selected);
+          }
+
+          ingredientInput.value = "";
+          dropdown.innerHTML = "";
+          dropdown.style.display = "none";
+        }
+      });
     </script>
-    
   </body>
 </html>
