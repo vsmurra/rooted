@@ -18,6 +18,8 @@ app.use("/assets/", express.static("./assets"));
 // Middleware to parse URL-encoded data from forms
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
+app.use('/assets', express.static('assets'));
+
 
 // Middleware for using HTTP verbs such as PUT or DELETE
 app.use(methodOverride("_method"));

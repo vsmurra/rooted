@@ -1,39 +1,94 @@
-<!-- edit meal page -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Edit Meal</title>
-    <style>
-      button{
-        background-color: #aed581;
-      }
-      .cancel{ background-color: #aed581;}
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <h1>Edit Meal</h1>
 
-    <form action="/meals/<%= meal._id %>?_method=PUT" method="POST">
-      <label for="photoUrl">Photo URL:</label>
-      <input type="text" name="photoUrl" id="photoUrl" value="<%= meal.photoUrl %>" required />
+  <body class="bg-green-50 text-gray-800 font-sans">
 
-      <label for="ingredients">Select Ingredients:</label>
-      <select name="ingredients" id="ingredients" multiple size="10">
-        <% ingredients.forEach(ingredient => { %>
-          <option 
-            value="<%= ingredient._id %>" 
-            <%= meal.ingredients.includes(ingredient._id) ? "selected" : "" %>>
-            <%= ingredient.name %>
-          </option>
-        <% }) %>
-      </select>
-<br>
-      <button type="submit">Update Meal</button>
-    </form>
-<form action="/meals/<%= meal._id %>">
-  <input class="cancel" type="submit" value="Cancel"/>
-</form>
+    <div class="max-w-2xl mx-auto p-6 mt-10 bg-white rounded-xl shadow-lg border border-green-200">
+
+      <h1 class="text-3xl font-bold text-green-700 text-center mb-8">Edit Meal</h1>
+
+      <form action="/meals/<%= meal._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="space-y-6">
+
+        <!-- Drag & Drop Upload -->
+        <div id="drop-area" class="w-full p-6 border-2 border-dashed border-green-400 rounded-lg text-center bg-green-100">
+          <p class="mb-2 font-medium text-green-800">Drag & drop an image or click to upload</p>
+          <input type="file" id="fileElem" accept="image/*" style="display: none;">
+          <label for="fileElem" class="cursor-pointer inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            Select Image
+          </label>
+          <input type="hidden" name="photoUrl" id="photoUrl" value="<%= meal.photoUrl %>">
+          <div id="preview" class="mt-4">
+            <% if (meal.photoUrl) { %>
+              <img src="<%= meal.photoUrl %>" class="w-full max-w-sm mx-auto rounded shadow-md" />
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Ingredient Input -->
+        <div>
+          <label for="ingredients" class="block mb-2 font-semibold text-green-800">Ingredients (comma-separated)</label>
+          <input 
+            type="text" 
+            name="ingredients" 
+            id="ingredients" 
+            value="<%= meal.ingredients.map(i => i.name).join(', ') %>" 
+            placeholder="e.g. ginger, turmeric, oats"
+            class="w-full border border-green-300 px-4 py-2 rounded focus:ring-2 focus:ring-green-500 focus:outline-none"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow">
+            Save Meal
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const dropArea = document.getElementById("drop-area");
+      const fileElem = document.getElementById("fileElem");
+      const preview = document.getElementById("preview");
+      const photoUrlInput = document.getElementById("photoUrl");
+
+      dropArea.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropArea.classList.add("bg-green-200");
+      });
+
+      dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("bg-green-200");
+      });
+
+      dropArea.addEventListener("drop", e => {
+        e.preventDefault();
+        dropArea.classList.remove("bg-green-200");
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+      });
+
+      fileElem.addEventListener("change", () => {
+        if (fileElem.files.length > 0) {
+          handleFile(fileElem.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          photoUrlInput.value = e.target.result;
+          preview.innerHTML = `<img src="${e.target.result}" class="w-full max-w-sm mx-auto rounded shadow-md" />`;
+        };
+        reader.readAsDataURL(file);
+      }
+    </script>
+
   </body>
 </html>

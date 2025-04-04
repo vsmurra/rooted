@@ -1,28 +1,26 @@
-import { Router } from "express";
-import isSignedIn from "../middleware/is-signed-in.js";
-import * as mealsController from "../controllers/meals.js";
+import express from 'express';
+const router = express.Router();
+import * as mealsCtrl from '../controllers/meals.js';
 
-const router = Router();
+// INDEX
+router.get('/', mealsCtrl.index);
 
-// INDEX - Show all meals
-router.get("/", isSignedIn, mealsController.index);
+// NEW
+router.get('/new', mealsCtrl.newMeal);
 
-// NEW - Form to log a new meal
-router.get("/new", isSignedIn, mealsController.newMeal);
+// CREATE
+router.post('/', mealsCtrl.create);
 
-// CREATE - Handle form submission to create a meal
-router.post("/", isSignedIn, mealsController.create);
+// SHOW
+router.get('/:id', mealsCtrl.show);
 
-// SHOW - Show details of one meal
-router.get("/:id", isSignedIn, mealsController.show);
+// EDIT
+router.get('/:id/edit', mealsCtrl.edit);
 
-// EDIT - Show form to edit a meal
-router.get("/:id/edit", isSignedIn, mealsController.edit);
+// UPDATE
+router.put('/:id', mealsCtrl.update);
 
-// UPDATE - Handle form submission to update meal
-router.put("/:id", isSignedIn, mealsController.update);
-
-// DELETE - Delete a meal
-router.delete("/:id", isSignedIn, mealsController.deleteMeal);
+// DELETE
+router.delete('/:id', mealsCtrl.destroy); // ✅ this was probably the crash
 
 export default router;
