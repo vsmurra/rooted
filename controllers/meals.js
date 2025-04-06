@@ -27,14 +27,21 @@ export const create = async (req, res) => {
     const { photoUrl, ingredients } = req.body;
     if (!photoUrl) throw new Error("Photo URL is required");
 
-    const ingredientNames = ingredients.split(',').map(i => i.trim().toLowerCase());
-    const ingredientDocs = await Ingredient.find({ name: { $in: ingredientNames } });
+    console.log("Raw ingredients from body (create):", ingredients);
 
-    await Meal.create({
+    const ingredientNames = JSON.parse(ingredients).map(i => i.trim().toLowerCase());
+    console.log("Parsed ingredient names:", ingredientNames);
+
+    const ingredientDocs = await Ingredient.find({ name: { $in: ingredientNames } });
+    console.log("Matched ingredients from DB:", ingredientDocs);
+
+    const newMeal = await Meal.create({
       photoUrl,
       ingredients: ingredientDocs.map(i => i._id),
       userId: req.session.user._id,
     });
+
+    console.log("Saved meal:", newMeal);
 
     res.redirect("/meals");
   } catch (error) {
@@ -71,15 +78,32 @@ export const edit = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const { photoUrl, ingredients } = req.body;
+    console.log("Update request body:", req.body);
+
     if (!photoUrl) throw new Error("Photo URL is required");
 
-    const ingredientNames = ingredients.split(',').map(i => i.trim().toLowerCase());
-    const ingredientDocs = await Ingredient.find({ name: { $in: ingredientNames } });
+    let ingredientNames;
 
-    await Meal.findByIdAndUpdate(req.params.id, {
+    try {
+      // If it's a JSON string (from new form)
+      ingredientNames = JSON.parse(ingredients);
+    } catch (e) {
+      // If it's a regular string (from edit form)
+      ingredientNames = ingredients.split(',').map(i => i.trim());
+    }
+
+    ingredientNames = ingredientNames.map(i => i.toLowerCase());
+    console.log("Parsed ingredient names (update):", ingredientNames);
+
+    const ingredientDocs = await Ingredient.find({ name: { $in: ingredientNames } });
+    console.log("Matched ingredient docs:", ingredientDocs);
+
+    const updatedMeal = await Meal.findByIdAndUpdate(req.params.id, {
       photoUrl,
       ingredients: ingredientDocs.map(i => i._id),
-    });
+    }, { new: true });
+
+    console.log("Updated meal:", updatedMeal);
 
     res.redirect(`/meals/${req.params.id}`);
   } catch (error) {

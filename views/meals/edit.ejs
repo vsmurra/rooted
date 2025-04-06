@@ -13,8 +13,7 @@
 
       <h1 class="text-3xl font-bold text-green-700 text-center mb-8">Edit Meal</h1>
 
-      <form action="/meals/<%= meal._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="space-y-6">
-
+      <form action="/meals/<%= meal._id %>?_method=PUT" method="POST" class="space-y-6">
         <!-- Drag & Drop Upload -->
         <div id="drop-area" class="w-full p-6 border-2 border-dashed border-green-400 rounded-lg text-center bg-green-100">
           <p class="mb-2 font-medium text-green-800">Drag & drop an image or click to upload</p>
@@ -30,17 +29,30 @@
           </div>
         </div>
 
-        <!-- Ingredient Input -->
+        <!-- Ingredient Search -->
         <div>
-          <label for="ingredients" class="block mb-2 font-semibold text-green-800">Ingredients (comma-separated)</label>
-          <input 
-            type="text" 
-            name="ingredients" 
-            id="ingredients" 
-            value="<%= meal.ingredients.map(i => i.name).join(', ') %>" 
-            placeholder="e.g. ginger, turmeric, oats"
+          <label for="ingredientSearch" class="block mb-2 font-semibold text-green-800">Search Ingredients</label>
+          <input
+            type="text"
+            id="ingredientSearch"
             class="w-full border border-green-300 px-4 py-2 rounded focus:ring-2 focus:ring-green-500 focus:outline-none"
+            placeholder="Type to search..."
           />
+          <div id="suggestions" class="border border-green-200 mt-2 rounded max-h-40 overflow-y-auto bg-white"></div>
+        </div>
+
+        <!-- Selected ingredients -->
+        <div class="mt-4">
+          <label class="block mb-2 font-semibold text-green-800">Selected Ingredients</label>
+          <div id="selectedIngredients" class="flex flex-wrap gap-2">
+            <% meal.ingredients.forEach(ingredient => { %>
+              <span class="ingredient-tag bg-green-200 px-3 py-1 rounded-full inline-flex items-center">
+                <%= ingredient.name %>
+                <button type="button" class="ml-2 text-red-500 font-bold remove">&times;</button>
+              </span>
+            <% }) %>
+          </div>
+          <input type="hidden" name="ingredients" id="ingredientsInput" value='<%= JSON.stringify(meal.ingredients.map(i => i.name)) %>' />
         </div>
 
         <!-- Submit Button -->
@@ -53,6 +65,7 @@
     </div>
 
     <script>
+      // Image Upload
       const dropArea = document.getElementById("drop-area");
       const fileElem = document.getElementById("fileElem");
       const preview = document.getElementById("preview");
@@ -88,6 +101,60 @@
         };
         reader.readAsDataURL(file);
       }
+
+      // Ingredient Autocomplete
+      const searchInput = document.getElementById("ingredientSearch");
+      const suggestions = document.getElementById("suggestions");
+      const selectedIngredientsDiv = document.getElementById("selectedIngredients");
+      const ingredientsInput = document.getElementById("ingredientsInput");
+
+      let selectedIngredients = JSON.parse(ingredientsInput.value || "[]");
+
+      searchInput.addEventListener("input", async () => {
+        const query = searchInput.value.trim();
+        suggestions.innerHTML = "";
+
+        if (!query) return;
+
+        try {
+          const res = await fetch(`/ingredients/search?q=${query}`);
+          const data = await res.json();
+
+          data.forEach(ingredient => {
+            if (!selectedIngredients.includes(ingredient.name)) {
+              const div = document.createElement("div");
+              div.className = "p-2 hover:bg-green-100 cursor-pointer";
+              div.textContent = ingredient.name;
+              div.addEventListener("click", () => {
+                selectedIngredients.push(ingredient.name);
+                updateSelectedIngredients();
+                searchInput.value = "";
+                suggestions.innerHTML = "";
+              });
+              suggestions.appendChild(div);
+            }
+          });
+        } catch (err) {
+          console.error("Autocomplete error:", err);
+        }
+      });
+
+      function updateSelectedIngredients() {
+        selectedIngredientsDiv.innerHTML = "";
+        selectedIngredients.forEach(name => {
+          const tag = document.createElement("span");
+          tag.className = "ingredient-tag bg-green-200 px-3 py-1 rounded-full inline-flex items-center";
+          tag.innerHTML = `${name}<button type="button" class="ml-2 text-red-500 font-bold remove">&times;</button>`;
+          tag.querySelector("button").addEventListener("click", () => {
+            selectedIngredients = selectedIngredients.filter(n => n !== name);
+            updateSelectedIngredients();
+          });
+          selectedIngredientsDiv.appendChild(tag);
+        });
+        ingredientsInput.value = JSON.stringify(selectedIngredients);
+      }
+
+      updateSelectedIngredients();
     </script>
 
   </body>

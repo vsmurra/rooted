@@ -1,7 +1,7 @@
-
 import { Router } from "express";
 import userRoutes from "./users.js";
 import mealRoutes from "./meals.js";
+import ingredientRoutes from "./ingredients.js"; // ✅ NEW: Ingredient search routes
 
 const router = Router();
 
@@ -15,5 +15,8 @@ router.use("/auth", userRoutes);
 
 // Meal routes (view, add, edit meals)
 router.use("/meals", mealRoutes);
+
+// ✅ Ingredient search route for live suggestions
+router.use("/ingredients", ingredientRoutes);
 
 export default router;
