@@ -1,3 +1,6 @@
+// meal has a base64 or URL image, a list of ingredients (referenced), and is linked to the user who created it
+
+
 import mongoose from "mongoose";
 
 const mealsSchema = new mongoose.Schema({

@@ -1,3 +1,6 @@
+//live ingredient search feature like Google autocomplete
+// custom search route (/ingredients/search?q=) to request matching ingredients in real time
+
 import express from 'express';
 import Ingredient from '../models/ingredient.js';
 

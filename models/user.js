@@ -1,3 +1,5 @@
+//Each ingredient has a name and a benefits string describing how it supports health
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({

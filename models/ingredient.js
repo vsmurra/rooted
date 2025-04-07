@@ -1,3 +1,5 @@
+//define three Mongoose schemas to represent the core data structures of the app
+
 import mongoose from "mongoose";
 
 const ingredientsSchema = new mongoose.Schema({

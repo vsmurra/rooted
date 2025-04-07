@@ -1,3 +1,5 @@
+//Handles all routes related to signing up, signing in, and signing out:
+
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
 
