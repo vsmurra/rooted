@@ -1,7 +1,7 @@
 import { Router } from "express";
 import userRoutes from "./users.js";
 import mealRoutes from "./meals.js";
-import ingredientRoutes from "./ingredients.js"; // ✅ NEW: Ingredient search routes
+import ingredientRoutes from "./ingredients.js"; // Ingredient search routes
 
 const router = Router();
 

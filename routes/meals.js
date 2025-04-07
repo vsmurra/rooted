@@ -21,6 +21,6 @@ router.get('/:id/edit', mealsCtrl.edit);
 router.put('/:id', mealsCtrl.update);
 
 // DELETE
-router.delete('/:id', mealsCtrl.destroy); // ✅ this was probably the crash
+router.delete('/:id', mealsCtrl.destroy);
 
 export default router;
