@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///Users/victoriamurra/coding/seb224/rooted/pages/_app.tsx"],"sourcesContent":["import type { AppProps } from 'next/app';\nimport { SessionProvider } from 'next-auth/react';\nimport Navbar from '@/components/Navbar';\nimport '@/styles/globals.css';\n\nexport default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {\n  return (\n    <SessionProvider session={session}>\n      <Navbar />\n      <Component {...pageProps} />\n    </SessionProvider>\n  );\n}\n\n"],"names":[],"mappings":";;;;;AACA;;;;;;;;;;AAIe,SAAS,IAAI,EAAE,SAAS,EAAE,WAAW,EAAE,OAAO,EAAE,GAAG,WAAW,EAAY;IACvF,qBACE,qKAAC,sJAAe;QAAC,SAAS;;0BACxB,qKAAC;;;;;0BACD,qKAAC;gBAAW,GAAG,SAAS;;;;;;;;;;;;AAG9B","debugId":null}}]
+}
